@@ -2,7 +2,13 @@ import React from 'react'
 
 const HowWe = () => {
   return (
-    <div></div>
+    <div className='bg-gradient-to-r '>
+        <div>
+
+
+        </div>
+
+    </div>
   )
 }
 
