@@ -1,29 +1,20 @@
-import './App.css'
-import Demo from './common/LocationTracker'
-import Logistics from './common/Logistics'
-import SimulateLocation from './common/SimulateLocation'
-import Tracker from './common/Tracker'
-import WeMade from './common/WeMade'
-import Whatmakes from './common/Whatmakes'
-import WhyChoose from './common/WhyChoose'
+import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import AdminTracker from './common/Tracker';
+import ExecutiveTracker from './common/ExecutiveTracker';
+import SimulateLocation from './common/SimulateLocation';
 
 function App() {
- 
   return (
-    <>
-     {/* <Demo/> */}
-     {/* <Logistics/> */}
-     {/* <Whatmakes/> */}
-     {/* <WhyChoose/> */}
-     {/* <WeMade/> */}
-      <div>
-      <h2 style={{ textAlign: "center" }}>🚚 Delivery Tracking</h2>
-      <SimulateLocation/>
- <Tracker/>
-    </div>
-   
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/admin" element={<AdminTracker />} />
+        <Route path="/executive" element={<ExecutiveTracker />} />
+        <Route path="/simulate" element={<SimulateLocation />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

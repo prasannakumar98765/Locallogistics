@@ -1,32 +1,50 @@
 import { useEffect } from "react";
 import socket from "../socket";
 
-const simulateMovement = (execId) => {
-  let lat = 12.9716; // Start near Bangalore
-  let lan = 77.5946;
+const trackRealLocation = (execId) => {
+  if (!navigator.geolocation) {
+    console.error("Geolocation is not supported by this browser.");
+    return;
+  }
 
-  setInterval(() => {
-    lat += (Math.random() - 0.5) * 0.002; // Random jitter
-    lan += (Math.random() - 0.5) * 0.002;
+  const watchId = navigator.geolocation.watchPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
 
-    socket.emit("locationUpdate", {
-      executiveId: execId,
-      lat,
-      lan,
-    });
+      socket.emit("locationUpdate", {
+        executiveId: execId,
+        lat: latitude,
+        lan: longitude,
+      });
 
-    console.log("📡 Sent location:", { executiveId: execId, lat, lan });
-  }, 3000);
+      console.log("📡 Sent real location:", { executiveId: execId, latitude, longitude });
+    },
+    (error) => {
+      console.error("Error getting location:", error);
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 5000,
+    }
+  );
+
+  // Optional: Clear watch when needed
+  return () => navigator.geolocation.clearWatch(watchId);
 };
 
-const SimulateLocation = () => {
+const RealLocationTracker = () => {
   useEffect(() => {
-    // Replace with a valid executive ID from your MongoDB
-    const EXEC_ID = "687a3ae8eaa5a61c41ec92c9"; 
-    simulateMovement(EXEC_ID);
+    const EXEC_ID = " ";
+
+    const stopTracking = trackRealLocation(EXEC_ID);
+
+    return () => {
+      if (stopTracking) stopTracking(); // Clean up on unmount
+    };
   }, []);
 
-  return <div>Simulating live movement...</div>;
+  return <div>Tracking real GPS location...</div>;
 };
 
-export default SimulateLocation;
+export default RealLocationTracker;
